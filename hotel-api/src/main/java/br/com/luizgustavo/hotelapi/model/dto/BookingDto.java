@@ -6,26 +6,26 @@ import br.com.luizgustavo.hotelapi.model.Booking;
 
 public class BookingDto {
 
-	private String pessoa;
+	private String hospede;
 	private LocalDateTime dataEntrada;
 	private LocalDateTime dataSaida;
 	private Boolean adicionalVeiculo;
 	private Double preco;
 	
 	public BookingDto(Booking booking) {
-		this.pessoa = booking.getPerson().getName();
+		this.hospede = booking.getPerson().getName();
 		this.dataEntrada = booking.getCheckIn();
 		this.dataSaida = booking.getCheckOut();
 		this.adicionalVeiculo = booking.useParking();
 		this.preco = booking.getPrice();
 	}
 
-	public String getPessoa() {
-		return pessoa;
+	public String getHospede() {
+		return hospede;
 	}
 
-	public void setPessoa(String pessoa) {
-		this.pessoa = pessoa;
+	public void setHospede(String hospede) {
+		this.hospede = hospede;
 	}
 
 	public LocalDateTime getDataEntrada() {

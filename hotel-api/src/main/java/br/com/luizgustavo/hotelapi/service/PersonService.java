@@ -3,6 +3,10 @@ package br.com.luizgustavo.hotelapi.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.luizgustavo.hotelapi.model.Person;
 import br.com.luizgustavo.hotelapi.model.dto.PersonDto;
+import br.com.luizgustavo.hotelapi.model.dto.PersonDtoWithBookingPrices;
 import br.com.luizgustavo.hotelapi.model.form.PersonForm;
 import br.com.luizgustavo.hotelapi.repository.PersonRepository;
 
@@ -18,6 +23,9 @@ public class PersonService {
 	
 	@Autowired
 	private PersonRepository repository;
+	
+	@PersistenceContext
+	private EntityManager manager;
 	
 	public PersonDto insert(PersonForm form) {
 		Person person = form.toEntity();
@@ -47,5 +55,16 @@ public class PersonService {
 	
 	public List<PersonDto> findAll(Pageable pageable) {
 		return this.repository.findAll(pageable).stream().map(person -> new PersonDto(person)).collect(Collectors.toList());		
+	}
+	
+	public List<PersonDto> findByNameOrDocumentOrTelephone(String param) {
+		return this.repository.findByNameOrDocumentOrTelephone(param).stream().map(p -> new PersonDto(p)).collect(Collectors.toList());
+	}
+	
+	public List<PersonDtoWithBookingPrices> findByBookingStatus(char checkOutNull) {
+		TypedQuery<PersonDtoWithBookingPrices> query = manager.createNamedQuery("Person.findByBookingStatus", PersonDtoWithBookingPrices.class);
+		query.setParameter("checkOutNull", checkOutNull);
+		List<PersonDtoWithBookingPrices> people = query.getResultList();
+		return people;
 	}
 }

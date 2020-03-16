@@ -1,0 +1,42 @@
+<fieldset class="border border-primary border-radius-default">
+  <div class="card-header bg-primary pt-2 pb-2">
+    <span class="text-light">Novo check in</span>
+  </div>
+
+  <form class="p-3" [formGroup]="formBooking" (ngSubmit)="save()" autocomplete="off">
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="dataEntrada">Data/hora de entrada</label>
+          <input type="datetime-local" id="dataEntrada" formControlName="dataEntrada" value="" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-6">
+        <label for="dataSaida">Data/hora de saída</label>
+        <input type="datetime-local" id="dataSaida" formControlName="dataSaida" value="" class="form-control" />
+      </div>
+    </div>
+
+    <div class="row align-items-center">
+      <div class="col-6">
+        <div class="form-group">
+          <label for="hospede">Pessoa</label>
+          <input type="text" id="hospede" formControlName="hospede" [ngbTypeahead]="autoCompletePerson" [resultFormatter]="resultFormatter"  
+            [inputFormatter]="inputFormatter" class="form-control"/>
+        </div>
+      </div>
+      <div class="col-6 mt-3">        
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="adicionalVeiculo" formControlName="adicionalVeiculo">
+          <label class="form-check-label" for="adicionalVeiculo">Possui veículo</label>
+        </div>
+      </div>
+    </div> 
+    
+    <div class="row">
+      <div class="col">
+        <button type="submit" class="btn btn-primary pl-4 pr-4" [disabled]="formBooking.invalid">Salvar</button>
+      </div>
+    </div>
+  </form>
+</fieldset>

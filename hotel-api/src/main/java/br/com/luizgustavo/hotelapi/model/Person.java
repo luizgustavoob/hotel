@@ -1,21 +1,52 @@
 package br.com.luizgustavo.hotelapi.model;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+
+import br.com.luizgustavo.hotelapi.model.dto.PersonDtoWithBookingPrices;
 
 @Entity
 @Table(name = "person")
+@NamedNativeQuery(name = "Person.findByBookingStatus", 
+	resultSetMapping = "peopleAndBookingPrices", 
+	query = "SELECT DISTINCT p.idPerson as id, p.name as nome, p.document as documento, p.telephone as telefone,"
+			+ "			 (SELECT b2.price "
+			+ "			    FROM booking b2"
+			+ "   		   WHERE b2.idperson = p.idperson "
+			+ "			     AND b2.checkin = (SELECT max(b3.checkin) "
+			+ "				                     FROM booking b3 "
+			+ "			                        WHERE b3.idperson = b2.idperson)) AS ultimaHospedagem,"
+			+ "			 (SELECT SUM(b2.price)"
+			+ "				FROM booking b2"
+			+ " 		   WHERE b2.idperson = p.idperson) AS totalHospedagens "
+			+ "     FROM person p "
+			+ "     LEFT JOIN booking b ON p.idperson = b.idperson "
+			+ "    WHERE (b.checkout IS NULL and :checkOutNull = 'S') OR (b.checkout IS NOT NULL and :checkOutNull = 'N') ")
+@SqlResultSetMapping(name = "peopleAndBookingPrices", classes = {
+	@ConstructorResult(targetClass = PersonDtoWithBookingPrices.class, columns = {
+			@ColumnResult(name = "id", type = Long.class),
+			@ColumnResult(name = "nome", type = String.class),
+			@ColumnResult(name = "documento", type = String.class),
+			@ColumnResult(name = "telefone", type = String.class),
+			@ColumnResult(name = "ultimaHospedagem", type = Double.class),
+			@ColumnResult(name = "totalHospedagens", type = Double.class) }) })
 public class Person {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "idperson")
 	private Long idPerson;
+	@Column(length = 50)
 	private String name;
-	@Column(unique = true)
+	@Column(unique = true, length = 15) 
 	private String document;
+	@Column(length = 15)
 	private String telephone;
 
 	public Person() {

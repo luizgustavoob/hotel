@@ -1,0 +1,59 @@
+<div class="mt-2 mb-4 border border-primary border-radius-default">
+  <div class="card-header bg-primary pt-2 pb-2">
+    <span class="text-light">Consultas</span>
+  </div>
+
+  <div class="pt-3 pl-3 pr-3">
+    <div class="form-group">
+      <div class="row">    
+        <label for="checkOutNull" class="col-12">Filtrar por:</label>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="custom-control custom-radio custom-control-inline">
+            <input #checkOutNull type="radio" id="checkOutNull" name="statusCheckOut" class="custom-control-input" (click)="filter(true)">
+            <label class="custom-control-label" for="checkOutNull">Pessoas ainda presentes</label>
+          </div>
+          
+          <div class="custom-control custom-radio custom-control-inline ml-3">
+            <input #checkOutNotNull type="radio" id="checkOutNotNull" name="statusCheckOut" class="custom-control-input" (click)="filter(false)">
+            <label class="custom-control-label" for="checkOutNotNull">Pessoas que já deixaram o hotel</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <table class="table mt-4">
+      <thead>
+        <tr>
+          <th class="border-top-0" scope="col">Nome</th>
+          <th class="border-top-0" scope="col">Documento</th>
+          <th class="border-top-0" scope="col">Valor gasto (R$)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let booking of bookingsClone">
+          <td>{{ booking.hospede.nome }}</td>
+          <td>{{ booking.hospede.documento }}</td>
+          <td data-toggle="tooltip" data-placement="top" [title]="getTitleTooltip(booking.precoTotal)">{{ booking.preco | currency:'BRL':true:'1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <nav>
+      <ul class="pagination">
+        <li class="page-item">
+          <button class="page-link rounded-pill" (click)="previous()" [disabled]="disablePrevious()">
+            <fa-icon [icon]="faIconPrevious"></fa-icon>
+            Previous
+          </button>
+        </li>
+        <li class="page-item ml-2">
+          <button class="page-link rounded-pill" (click)="next()" [disabled]="disableNext()">
+            Next
+            <fa-icon [icon]="faIconNext"></fa-icon>          
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>

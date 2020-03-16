@@ -9,27 +9,36 @@ import br.com.luizgustavo.hotelapi.model.Person;
 
 public class PersonForm {
 
-	private Long idPerson;
+	private Long id;
 	@NotNull @NotBlank @Length(max = 50)
 	private String nome;
 	@NotNull @NotBlank @Length(max = 15)
 	private String documento;
 	@NotNull @NotBlank @Length(max = 15)
 	private String telefone;
+	
+	public PersonForm() {
+	}
 
-	public PersonForm(Long idPerson, String nome, String documento, String telefone) {
-		this.idPerson = idPerson;
+	public PersonForm(Long id, String nome, String documento, String telefone) {
+		this.id = id;
 		this.nome = nome;
 		this.documento = documento;
 		this.telefone = telefone;
 	}
 	
-	public Long getIdPerson() {
-		return idPerson;
+	public PersonForm(String nome, String documento, String telefone) {
+		this.nome = nome;
+		this.documento = documento;
+		this.telefone = telefone;
 	}
 
-	public void setIdPerson(Long idPerson) {
-		this.idPerson = idPerson;
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -63,8 +72,10 @@ public class PersonForm {
 	}
 	
 	public void toEntity(Person person) {
+		person.setIdPerson(this.id);
 		person.setName(this.nome);
 		person.setDocument(this.documento);
 		person.setTelephone(this.telefone);
 	}
+	
 }

@@ -1,7 +1,9 @@
 package br.com.luizgustavo.hotelapi.controller;
 
+import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.luizgustavo.hotelapi.model.dto.PersonDto;
+import br.com.luizgustavo.hotelapi.model.dto.PersonDtoWithBookingPrices;
 import br.com.luizgustavo.hotelapi.model.form.PersonForm;
 import br.com.luizgustavo.hotelapi.service.PersonService;
 
@@ -30,9 +35,15 @@ public class PersonController {
 	private PersonService service;
 	
 	@PostMapping
-	public ResponseEntity<PersonDto> insert(@Valid @RequestBody PersonForm form) {
+	public ResponseEntity<PersonDto> insert(@Valid @RequestBody PersonForm form, HttpServletResponse response) {
 		PersonDto person = this.service.insert(form);
-		return ResponseEntity.ok(person);
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequestUri()
+				.path("/{id}")
+				.buildAndExpand(person.getId())
+				.toUri();
+		response.setHeader("Location", uri.toASCIIString());
+		return ResponseEntity.status(HttpStatus.CREATED).body(person);
 	}
 	
 	@GetMapping("/page")
@@ -63,6 +74,18 @@ public class PersonController {
 	public ResponseEntity<PersonDto> update(@PathVariable("id") Long idPerson, @Valid @RequestBody PersonForm form) {
 		PersonDto person = this.service.update(idPerson, form);
 		return ResponseEntity.ok(person);
+	}
+	
+	@GetMapping("/filter")
+	public ResponseEntity<List<PersonDto>> findByNameOrDocumentOrTelephone(@RequestParam("param") String param) {
+		List<PersonDto> people = this.service.findByNameOrDocumentOrTelephone(param);
+		return ResponseEntity.ok(people);
+	}
+	
+	@GetMapping("/filterByBookingStatus")
+	public ResponseEntity<List<PersonDtoWithBookingPrices>> findByBookingStatus(@RequestParam("checkOutNull") char checkOutNull) {
+		List<PersonDtoWithBookingPrices> people = this.service.findByBookingStatus(checkOutNull);
+		return ResponseEntity.ok(people);
 	}
 	
 }

@@ -1,0 +1,33 @@
+<form [formGroup]="formPerson" (ngSubmit)="save()" autocomplete="off">
+  <div class="modal-header">
+    <h4 class="modal-title">Dados pessoais do novo hóspede</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <div class="form-group row">
+      <label for="nome" class="col-sm-3 col-form-label">Nome</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="nome" class="form-control" id="nome" >
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="documento" class="col-sm-3 col-form-label">Documento</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="documento" class="form-control" id="documento">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="telefone" class="col-sm-3 col-form-label">Telefone</label>
+      <div class="col-sm-9">
+        <input type="text" formControlName="telefone" class="form-control" id="telefone">
+      </div>
+    </div>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="formPerson.invalid">Salvar</button>
+  </div>
+</form>

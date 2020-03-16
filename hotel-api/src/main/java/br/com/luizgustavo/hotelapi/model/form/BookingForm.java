@@ -10,30 +10,33 @@ import br.com.luizgustavo.hotelapi.model.Booking;
 public class BookingForm {
 
 	@Valid
-	private PersonForm pessoa;
+	private PersonForm hospede;
 	@NotNull
 	private LocalDateTime dataEntrada;
 	private LocalDateTime dataSaida;
 	@NotNull
 	private Boolean adicionalVeiculo;
 	private Double preco;
+	
+	public BookingForm() {
+	}
 
-	public BookingForm(PersonForm pessoa, LocalDateTime dataEntrada, LocalDateTime dataSaida, Boolean adicionalVeiculo,
+	public BookingForm(PersonForm hospede, LocalDateTime dataEntrada, LocalDateTime dataSaida, Boolean adicionalVeiculo,
 			Double preco) {
 		super();
-		this.pessoa = pessoa;
+		this.hospede = hospede;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
 		this.adicionalVeiculo = adicionalVeiculo;
 		this.preco = preco;
 	}
 
-	public PersonForm getPessoa() {
-		return pessoa;
+	public PersonForm getHospede() {
+		return hospede;
 	}
 
-	public void setPessoa(PersonForm pessoa) {
-		this.pessoa = pessoa;
+	public void setHospede(PersonForm hospede) {
+		this.hospede = hospede;
 	}
 
 	public LocalDateTime getDataEntrada() {
@@ -75,7 +78,7 @@ public class BookingForm {
 	}
 	
 	public void toEntity(Booking booking) {
-		booking.setPerson(this.pessoa.toEntity());
+		booking.setPerson(this.hospede.toEntity());
 		booking.setCheckIn(this.dataEntrada);
 		booking.setCheckOut(this.dataSaida);
 		booking.setUseParking(this.adicionalVeiculo);

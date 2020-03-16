@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -17,9 +18,11 @@ public class Booking {
 
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idBooking;
-	@ManyToOne @Column(name = "idperson")
+	@ManyToOne @JoinColumn(name = "idperson", referencedColumnName = "idperson")
 	private Person person;
+	@Column(name = "checkin")
 	private LocalDateTime checkIn;
+	@Column(name = "checkout")
 	private LocalDateTime checkOut;
 	private Boolean parking;
 	private Double price;
