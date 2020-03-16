@@ -7,7 +7,7 @@ Este repositório contém os projetos desenvolvidos para simular alguns processo
 * [Spring Boot](https://spring.io/projects/spring-boot)
 * [String Data JPA](https://spring.io/projects/spring-data-jpa)
 * [Maven](http://maven.apache.org/)
-* [H2 Database Engine](http://www.h2database.com/html/main.html)
+* [PostgreSQL](https://www.postgresql.org/)
 * [Angular 9](https://angular.io/)
 * [Ng Bootstrap](https://ng-bootstrap.github.io/#/home)
 * [Bootstrap](https://getbootstrap.com/)
