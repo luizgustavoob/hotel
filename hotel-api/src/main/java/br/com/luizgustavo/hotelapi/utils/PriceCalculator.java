@@ -2,7 +2,6 @@ package br.com.luizgustavo.hotelapi.utils;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import br.com.luizgustavo.hotelapi.model.Booking;

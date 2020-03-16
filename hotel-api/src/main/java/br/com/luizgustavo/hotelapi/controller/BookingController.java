@@ -1,7 +1,9 @@
 package br.com.luizgustavo.hotelapi.controller;
 
+import java.net.URI;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.luizgustavo.hotelapi.model.dto.BookingDto;
 import br.com.luizgustavo.hotelapi.model.form.BookingForm;
@@ -30,9 +33,15 @@ public class BookingController {
 	private BookingService service;
 	
 	@PostMapping
-	public ResponseEntity<BookingDto> insert(@Valid @RequestBody BookingForm form) {
+	public ResponseEntity<BookingDto> insert(@Valid @RequestBody BookingForm form, HttpServletResponse response) {
 		BookingDto booking = this.service.insert(form);
-		return ResponseEntity.ok(booking);
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequestUri()
+				.path("/{id}")
+				.buildAndExpand(booking.getId())
+				.toUri();
+		response.setHeader("Location", uri.toASCIIString());
+		return ResponseEntity.status(HttpStatus.CREATED).body(booking);
 	}
 	
 	@GetMapping("/page")
