@@ -98,7 +98,7 @@ E o segundo é o /filterByBookingStatus, que consulta os hóspedes que ainda est
   "adicionalVeiculo": false
 }
 ```
-* PUT: Atualiza uma reserva . Enviar na URL o código do hóspede (**/bookings/1**) e no corpo um JSON no seguinte formato:
+* PUT: Atualiza uma reserva . Enviar na URL o código da reserva (**/bookings/1**) e no corpo um JSON no seguinte formato:
 
 ```
 {
