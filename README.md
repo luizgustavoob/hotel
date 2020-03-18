@@ -51,6 +51,7 @@ e a aplicação back-end será iniciada. A API disponibiliza 2 *endpoints* para 
 
 ### EndPoint /people (verbos HTTP)
 * GET: Retorna uma lista de hóspedes.
+* GET **/page**: Retorna uma página de hóspedes.
 * POST: Insere um novo hóspede. Deve ser enviado um JSON no seguinte formato:
 ```
 {
@@ -75,15 +76,14 @@ O primeiro é o /filter, que consulta os hóspedes a partir de um termo fornecid
 ```
   http://localhost:8086/people/filter?param=Fulano
 ```
-E o segundo é o /filterByBookingStatus, que consulta os hóspedes que ainda estão no hotel, ou que já fizeram checkout. Essa condição é definida em um *query param*, como
+E o segundo é o /filterByDocument, se um determinado documento já foi utilizado no cadastro de algum hóspede
 ```
-  http://localhost:8086/people/filterByBookingStatus?checkOutNull=S
-  
-  http://localhost:8086/people/filterByBookingStatus?checkOutNull=N
+  http://localhost:8086/people/filterByDocument?param=123456
 ```
 
 ### EndPoint /bookings (verbos HTTP)
 * GET: Retorna uma lista de reservas.
+* GET **/page**: Retorna uma página de reservas.
 * POST: Insere uma nova reserva. Deve ser enviado um JSON no seguinte formato:
 ```
 {
