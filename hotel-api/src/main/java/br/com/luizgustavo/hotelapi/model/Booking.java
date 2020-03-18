@@ -4,19 +4,45 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import javax.persistence.Column;
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
+
+import br.com.luizgustavo.hotelapi.model.dto.PeopleAndPrices;
 
 @Entity
 @Table(name = "booking")
+@NamedNativeQuery(name = "Booking.peopleAndPrices", 
+	resultSetMapping = "peopleAndPrices", 
+	query = "select distinct b.idbooking, b.checkin as dataentrada, b.checkout as datasaida, b.parking as adicionalveiculo, b.price as preco, " + 
+			"	(select sum(price) from booking b2 where b2.idperson = b.idperson) as precototal, " + 
+			"	p.idperson, p.name as nome, p.document as documento, p.telephone as telefone " + 
+			" from booking b " + 
+			" left join person p on p.idperson = b.idperson " + 
+			" where (b.checkout is null and :checkOutNull = 'S') or (b.checkout is not null and :checkOutNull = 'N') or (:checkOutNull = 'A') ")
+@SqlResultSetMapping(name = "peopleAndPrices", classes = {
+		@ConstructorResult(targetClass = PeopleAndPrices.class, columns = {
+				@ColumnResult(name = "idbooking", type = Long.class),
+				@ColumnResult(name = "dataentrada", type = LocalDateTime.class),
+				@ColumnResult(name = "datasaida", type = LocalDateTime.class),
+				@ColumnResult(name = "adicionalveiculo", type = Boolean.class),
+				@ColumnResult(name = "preco", type = Double.class),
+				@ColumnResult(name = "precototal", type = Double.class),
+				@ColumnResult(name = "idperson", type = Long.class),
+				@ColumnResult(name = "nome", type = String.class),
+				@ColumnResult(name = "documento", type = String.class),
+				@ColumnResult(name = "telefone", type = String.class)}) })
 public class Booking {
 
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) @Column(name = "idbooking")
 	private Long idBooking;
 	@ManyToOne @JoinColumn(name = "idperson", referencedColumnName = "idperson")
 	private Person person;

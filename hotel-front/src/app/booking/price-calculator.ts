@@ -1,4 +1,3 @@
-import { Booking } from './booking';
 import * as moment from 'moment';
 
 export class PriceCalculator {
@@ -8,21 +7,21 @@ export class PriceCalculator {
   private static NORMALPARKINGPRICE: number = 15.0;
   private static WEEKENDPARKINGPRICE: number = 20.0;
   
-  static calculateBookingPrice(booking: Booking) {
-    const dateCheckout = moment(booking.dataSaida, 'YYYY-MM-DD');
-    let date = moment(booking.dataEntrada, 'YYYY-MM-DD');
+  static calculateBookingPrice(checkIn: Date, checkOut: Date, useParking: boolean): number {
+    const dateCheckout = moment(checkOut, 'YYYY-MM-DD');
+    let date = moment(checkIn, 'YYYY-MM-DD');
     
     let price = 0;    
     while (date.isBefore(dateCheckout)) {      
-      price += this.calculatePriceOfDate(date, booking.adicionalVeiculo);
+      price += this.calculatePriceOfDate(date, useParking);
       date = moment(date).add(1, 'days');
     }
     
-    if (this.newDaily(booking.dataSaida)) {
-      price += this.calculatePriceOfDate(moment(date).add(1, 'days'), booking.adicionalVeiculo);      
+    if (this.newDaily(checkOut)) {
+      price += this.calculatePriceOfDate(moment(date).add(1, 'days'), useParking);      
     }
     
-    booking.preco = price;
+    return price;
   }
 
   private static calculatePriceOfDate(data: moment.Moment, adicionalVeiculo: boolean): number {

@@ -1,9 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { Booking } from '../booking';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Person } from '../person/person';
+import { PersonService } from '../person/person.service';
+import { BookingService } from '../booking.service';
 import { PriceCalculator } from '../price-calculator';
 
 @Component({
@@ -13,10 +15,12 @@ import { PriceCalculator } from '../price-calculator';
 export class BookingFormComponent implements OnInit {
 
   formBooking: FormGroup;
-  @Input() people: Person[] = [];
+  people: Person[] = [];
   @Output() onSave = new EventEmitter;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private formBuilder: FormBuilder, 
+              private personService: PersonService,
+              private bookingService: BookingService) { }
 
   ngOnInit() {
     this.formBooking = this.formBuilder.group({
@@ -29,23 +33,34 @@ export class BookingFormComponent implements OnInit {
 
   autoCompletePerson = (text$: Observable<string>) =>
     text$.pipe(
-      debounceTime(200),
+      debounceTime(500),
       distinctUntilChanged(),
-      map(term => term === '' ? [] : this.people.filter(p =>
-        p.nome.toLowerCase().indexOf(term.toLowerCase()) > -1 || p.documento.indexOf(term) > -1 || p.telefone.indexOf(term) > -1
-      ))
+      switchMap(term => !term ? [] :this.personService.filter(term)),
+      catchError(() => of([]))
     )
 
-  resultFormatter = (result: any): string => {return result.nome};
+  resultFormatter = (result: Person): string => {return result.nome};
 
-  inputFormatter = (item: any) => item.nome;
+  inputFormatter = (item: Person) => item.nome;
   
   save() {
     const booking = this.formBooking.getRawValue() as Booking;    
-    if (booking.dataSaida) {
-      PriceCalculator.calculateBookingPrice(booking);
-    }
-    this.onSave.emit({booking});
-    this.formBooking.reset();
+    this.bookingService.insert(booking).subscribe(
+      res => {        
+        this.onSave.emit({'booking': res});        
+        this.formBooking.setValue({
+          dataEntrada: '',
+          dataSaida: '',
+          hospede: '',
+          adicionalVeiculo: false
+        })
+      }
+    );    
+  }
+
+  getPrice() {
+    return PriceCalculator.calculateBookingPrice(this.formBooking.get('dataEntrada')?.value,
+                                                 this.formBooking.get('dataSaida')?.value, 
+                                                 this.formBooking.get('adicionalVeiculo')?.value);
   }
 }

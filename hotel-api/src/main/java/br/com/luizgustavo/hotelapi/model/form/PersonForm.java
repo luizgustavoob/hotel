@@ -27,20 +27,6 @@ public class PersonForm {
 		this.telefone = telefone;
 	}
 	
-	public PersonForm(String nome, String documento, String telefone) {
-		this.nome = nome;
-		this.documento = documento;
-		this.telefone = telefone;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	public String getNome() {
 		return nome;
 	}
@@ -67,15 +53,19 @@ public class PersonForm {
 	
 	public Person toEntity() {
 		Person person = new Person();
-		this.toEntity(person);
-		return person;
-	}
-	
-	public void toEntity(Person person) {
 		person.setIdPerson(this.id);
 		person.setName(this.nome);
 		person.setDocument(this.documento);
 		person.setTelephone(this.telefone);
+		return person;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
 }

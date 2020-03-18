@@ -11,7 +11,7 @@ import javax.persistence.NamedNativeQuery;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.Table;
 
-import br.com.luizgustavo.hotelapi.model.dto.PersonDtoWithBookingPrices;
+import br.com.luizgustavo.hotelapi.model.dto.PeopleAndPrices;
 
 @Entity
 @Table(name = "person")
@@ -31,7 +31,7 @@ import br.com.luizgustavo.hotelapi.model.dto.PersonDtoWithBookingPrices;
 			+ "     LEFT JOIN booking b ON p.idperson = b.idperson "
 			+ "    WHERE (b.checkout IS NULL and :checkOutNull = 'S') OR (b.checkout IS NOT NULL and :checkOutNull = 'N') ")
 @SqlResultSetMapping(name = "peopleAndBookingPrices", classes = {
-	@ConstructorResult(targetClass = PersonDtoWithBookingPrices.class, columns = {
+	@ConstructorResult(targetClass = PeopleAndPrices.class, columns = {
 			@ColumnResult(name = "id", type = Long.class),
 			@ColumnResult(name = "nome", type = String.class),
 			@ColumnResult(name = "documento", type = String.class),

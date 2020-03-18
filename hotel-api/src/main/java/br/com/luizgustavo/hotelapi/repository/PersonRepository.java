@@ -1,6 +1,7 @@
 package br.com.luizgustavo.hotelapi.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,5 +18,7 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 			+ "OR LOWER(p.document) LIKE LOWER(CONCAT('%', :param, '%')) "
 			+ "OR LOWER(p.telephone) LIKE LOWER(CONCAT('%', :param, '%'))")
 	List<Person> findByNameOrDocumentOrTelephone(@Param("param") String param);
+	
+	Optional<Person> findByDocument(String document);
 	
 }

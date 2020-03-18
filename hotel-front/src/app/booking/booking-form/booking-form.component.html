@@ -1,7 +1,7 @@
 <fieldset class="border border-primary border-radius-default">
   <div class="card-header bg-primary pt-2 pb-2">
     <span class="text-light">Novo check in</span>
-  </div>
+  </div>  
 
   <form class="p-3" [formGroup]="formBooking" (ngSubmit)="save()" autocomplete="off">
     <div class="row">
@@ -34,8 +34,11 @@
     </div> 
     
     <div class="row">
-      <div class="col">
+      <div class="col-6">
         <button type="submit" class="btn btn-primary pl-4 pr-4" [disabled]="formBooking.invalid">Salvar</button>
+      </div>
+      <div class="col-6" *ngIf="getPrice()">
+        <span class="badge badge-secondary">Valor aproximado da reserva: R$ {{ getPrice().toFixed(2) }}</span>
       </div>
     </div>
   </form>

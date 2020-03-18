@@ -10,19 +10,31 @@
     <div class="form-group row">
       <label for="nome" class="col-sm-3 col-form-label">Nome</label>
       <div class="col-sm-9">
-        <input type="text" formControlName="nome" class="form-control" id="nome" >
+        <input type="text" formControlName="nome" class="form-control" id="nome">
+        <hotel-booking-error 
+          [control]="formPerson.get('nome')" error="required" text="Informe o nome da pessoa">
+        </hotel-booking-error>
       </div>
     </div>
     <div class="form-group row">
       <label for="documento" class="col-sm-3 col-form-label">Documento</label>
       <div class="col-sm-9">
         <input type="text" formControlName="documento" class="form-control" id="documento">
+        <hotel-booking-error
+          [control]="formPerson.get('documento')" error="required" text="Informe o documento da pessoa">
+        </hotel-booking-error>
+        <hotel-booking-error
+          [control]="formPerson.get('documento')" error="existe" text="Documento já cadastrado para outra pessoa">
+        </hotel-booking-error>
       </div>
     </div>
     <div class="form-group row">
       <label for="telefone" class="col-sm-3 col-form-label">Telefone</label>
       <div class="col-sm-9">
         <input type="text" formControlName="telefone" class="form-control" id="telefone">
+        <hotel-booking-error
+          [control]="formPerson.get('telefone')" error="required" text="Informe o telefone da pessoa">
+        </hotel-booking-error>
       </div>
     </div>
   </div>

@@ -15,7 +15,16 @@ public class PersonDto {
 		this.documento = person.getDocument();
 		this.telefone = person.getTelephone();
 	}
-	
+
+	public PersonDto() { }
+
+	public PersonDto(Long id, String nome, String documento, String telefone) {
+		this.id = id;
+		this.nome = nome;
+		this.documento = documento;
+		this.telefone = telefone;
+	}
+
 	public Long getId() {
 		return id;
 	}

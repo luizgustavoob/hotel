@@ -3,6 +3,7 @@ import localePt from '@angular/common/locales/pt';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -12,6 +13,7 @@ import { BookingsComponent } from './booking/bookings.component';
 import { BookingFormComponent } from './booking/booking-form/booking-form.component';
 import { BookingListComponent } from './booking/booking-list/booking-list.component';
 import { PersonComponent } from './booking/person/person.component';
+import { MessageErrorComponent } from './message-error/message-error.component';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -25,11 +27,13 @@ registerLocaleData(localePt);
     BookingsComponent,
     BookingFormComponent,
     BookingListComponent,
-    PersonComponent
+    PersonComponent,
+    MessageErrorComponent
   ],
   imports: [
     BrowserModule,
     CommonModule,
+    HttpClientModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,

@@ -1,5 +1,6 @@
 <div class="mt-2">
+  <ngb-alert *ngIf="message" type="success" (close)="!message">{{ message }}</ngb-alert>
   <button class="btn btn-primary pl-4 pr-4 mt-2 mb-2" (click)="addPerson()">Incluir pessoa</button>
-  <hotel-booking-form (onSave)="onSaveBooking($event)" [people]="people"></hotel-booking-form>  
-  <hotel-booking-list [bookings]="bookings"></hotel-booking-list>
+  <hotel-booking-form (onSave)="onSaveBooking($event)"></hotel-booking-form>  
+  <hotel-booking-list [bookings]="bookings" (onChangedPage)="onChangedPage($event)" (onFilter)="onFilter($event)"></hotel-booking-list>
 </div>

@@ -7,15 +7,26 @@ import br.com.luizgustavo.hotelapi.model.Booking;
 public class BookingDto {
 
 	private Long id;
-	private String hospede;
+	private PersonDto hospede;
 	private LocalDateTime dataEntrada;
 	private LocalDateTime dataSaida;
 	private Boolean adicionalVeiculo;
 	private Double preco;
+	private Double precoTotal;
+	
+	public BookingDto(PeopleAndPrices peopleAndPrices) {
+		this.id = peopleAndPrices.getIdbooking();
+		this.hospede = new PersonDto(peopleAndPrices.getIdperson(), peopleAndPrices.getNome(), peopleAndPrices.getDocumento(), peopleAndPrices.getTelefone());
+		this.dataEntrada = peopleAndPrices.getDataentrada();
+		this.dataSaida = peopleAndPrices.getDatasaida();
+		this.adicionalVeiculo = peopleAndPrices.getAdicionalveiculo();
+		this.preco = peopleAndPrices.getPreco();
+		this.precoTotal = peopleAndPrices.getPrecototal();
+	}
 	
 	public BookingDto(Booking booking) {
 		this.id = booking.getIdBooking();
-		this.hospede = booking.getPerson().getName();
+		this.hospede = new PersonDto(booking.getPerson());
 		this.dataEntrada = booking.getCheckIn();
 		this.dataSaida = booking.getCheckOut();
 		this.adicionalVeiculo = booking.useParking();
@@ -30,11 +41,11 @@ public class BookingDto {
 		this.id = id;
 	}
 
-	public String getHospede() {
+	public PersonDto getHospede() {
 		return hospede;
 	}
 
-	public void setHospede(String hospede) {
+	public void setHospede(PersonDto hospede) {
 		this.hospede = hospede;
 	}
 
@@ -70,4 +81,12 @@ public class BookingDto {
 		this.preco = preco;
 	}
 
+	public Double getPrecoTotal() {
+		return precoTotal;
+	}
+
+	public void setPrecoTotal(Double precoTotal) {
+		this.precoTotal = precoTotal;
+	}
+	
 }

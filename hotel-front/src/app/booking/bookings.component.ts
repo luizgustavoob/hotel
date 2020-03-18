@@ -1,40 +1,61 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Booking } from './booking';
-import { Person } from './person/person';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PersonComponent } from './person/person.component';
+import { Page } from './page';
+import { BookingService } from './booking.service';
+import { Subject, BehaviorSubject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'hotel-bookings',
   templateUrl: './bookings.component.html'
 })
-export class BookingsComponent {
+export class BookingsComponent implements OnInit {
 
-  people: Person[] = [];
-  bookings: Booking[] = [];
+  bookings: Page<Booking> = Object.assign({});
+  page: number = 0;
+  size: number = 3;
+  checkOutNull: string = 'A';
+  
+  private _success = new Subject<string>();
+  message: string;
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private modalService: NgbModal,
+              private bookingService: BookingService) { }
+
+  ngOnInit() {
+    this._success.subscribe(msg => this.message = msg);
+    this._success.pipe(debounceTime(3500)).subscribe(() => this.message = null);
+    this.loadBookings();  
+  }
+
+  private loadBookings() {
+    this.bookingService.findAllPaginated(this.page, this.size, this.checkOutNull).subscribe(
+      res => this.bookings = res
+    );
+  }
 
   addPerson() {
     const modalRef = this.modalService.open(PersonComponent);    
     modalRef.result.then(
-      result => this.people = this.people.concat(result), 
-      reason => console.log('Fechou sem salvar', reason));
+      () => this._success.next('Pessoa salva com sucesso!'),
+      () => console.log('Fechou sem salvar'));
   }
 
   onSaveBooking(event) {
-    const booking = event.booking as Booking;
-    
-    let total = this.bookings.filter(b => b.hospede.nome === booking.hospede.nome).reduce((total, bookingCurrent) => {
-      return total + bookingCurrent.preco;
-    }, booking.preco);
+    this._success.next('Reserva salva com sucesso!')
+    this.loadBookings();    
+  }
 
-    this.bookings = this.bookings.concat(booking);
+  onChangedPage(event) {
+    this.page = event.page;
+    this.size = event.size;
+    this.loadBookings();  
+  }
 
-    this.bookings.map(b => {
-      if (b.hospede.nome === booking.hospede.nome) {
-        b.precoTotal = total;
-      }
-    });
+  onFilter(event) {
+    this.checkOutNull = event.checkOutNull ? 'S' : 'N';
+    this.loadBookings();
   }
 }

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.luizgustavo.hotelapi.model.dto.PersonDto;
-import br.com.luizgustavo.hotelapi.model.dto.PersonDtoWithBookingPrices;
 import br.com.luizgustavo.hotelapi.model.form.PersonForm;
 import br.com.luizgustavo.hotelapi.service.PersonService;
 
@@ -47,8 +47,8 @@ public class PersonController {
 	}
 	
 	@GetMapping("/page")
-	public ResponseEntity<List<PersonDto>> findAll(Pageable pageable) {
-		List<PersonDto> people = this.service.findAll(pageable);
+	public ResponseEntity<Page<PersonDto>> findAll(Pageable pageable) {
+		Page<PersonDto> people = this.service.findAll(pageable);
 		return ResponseEntity.ok(people);
 	}
 	
@@ -82,10 +82,10 @@ public class PersonController {
 		return ResponseEntity.ok(people);
 	}
 	
-	@GetMapping("/filterByBookingStatus")
-	public ResponseEntity<List<PersonDtoWithBookingPrices>> findByBookingStatus(@RequestParam("checkOutNull") char checkOutNull) {
-		List<PersonDtoWithBookingPrices> people = this.service.findByBookingStatus(checkOutNull);
-		return ResponseEntity.ok(people);
+	@GetMapping("/filterByDocument")
+	@ResponseStatus(code = HttpStatus.OK)
+	public boolean findByDocument(@RequestParam("param") String param) {
+		return this.service.findByDocument(param);
 	}
 	
 }

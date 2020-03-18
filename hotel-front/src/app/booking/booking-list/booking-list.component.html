@@ -26,16 +26,18 @@
     <table class="table mt-4">
       <thead>
         <tr>
+          <th class="border-top-0" scope="col">#</th>
           <th class="border-top-0" scope="col">Nome</th>
           <th class="border-top-0" scope="col">Documento</th>
           <th class="border-top-0" scope="col">Valor gasto (R$)</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let booking of bookingsClone">
+        <tr *ngFor="let booking of bookings.content">
+          <td>{{ booking.id }}</td>
           <td>{{ booking.hospede.nome }}</td>
           <td>{{ booking.hospede.documento }}</td>
-          <td data-toggle="tooltip" data-placement="top" [title]="getTitleTooltip(booking.precoTotal)">{{ booking.preco | currency:'BRL':true:'1.2-2' }}</td>
+          <td data-toggle="tooltip" data-placement="top" [title]="getTitleTooltip(booking.precoTotal)">{{ booking.preco | currency:'BRL' }}</td>
         </tr>
       </tbody>
     </table>

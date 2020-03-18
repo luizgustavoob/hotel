@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { Booking } from '../booking';
+import { Component, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
 import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
+import { Booking } from '../booking';
+import { Page } from '../page';
 
 @Component({
   selector: 'hotel-booking-list',
@@ -10,63 +11,51 @@ import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons';
 export class BookingListComponent implements OnChanges {
 
   faIconPrevious = faLongArrowAltLeft;
-  faIconNext = faLongArrowAltRight;
-  @Input() bookings: Booking[] = [];
-  bookingsClone: Booking[] = [];
-  bookingsFilter: Booking[] = [];
+  faIconNext = faLongArrowAltRight;  
 
+  @Input() bookings: Page<Booking> = Object.assign({});
+  @Output() onChangedPage = new EventEmitter();
+  @Output() onFilter = new EventEmitter();
   private page: number = 0;
   private maxRecords = 3;
+  private totalElements : number; 
 
   ngOnChanges(changes: SimpleChanges) {
-    this.bookingsClone = [...this.bookings];
-    this.bookingsFilter = [...this.bookingsClone];
-    this.applyPagination();
+    this.bookings = changes.bookings.currentValue;
+    this.totalElements = this.bookings.totalElements;
   }
 
-  filter(checkOutNull) {
-    if (!this.bookings.length) {
-      return;
-    }
-    
-    this.bookingsClone = [...this.bookings];
-    this.bookingsClone = this.bookingsClone.filter(b => checkOutNull ? !b.dataSaida : b.dataSaida);
-    this.bookingsFilter = [...this.bookingsClone];
-    this.applyPagination();
-  }  
-
-  applyPagination() {
-    let bookingsAux = [...this.bookingsFilter];
-    this.bookingsClone = [];
-    let maxRecordsPagination = this.page === 0 ? this.maxRecords : this.maxRecords + 3;
-    this.bookingsClone = [...bookingsAux.slice(this.page, maxRecordsPagination)];
+  notifyChange(page, size) {
+    this.onChangedPage.emit({page, size});
   }
 
   next() {
-    if (!this.bookingsClone.length) {
-      return;
-    }
-    this.page += 3;
-    this.applyPagination(); 
+    ++this.page;
+    this.notifyChange(this.page, this.maxRecords);
   }
 
   previous() {
-    if (this.page === 0) {
-      return;
-    }
-    this.page -= 3;
-    this.applyPagination();
+    --this.page;
+    this.notifyChange(this.page, this.maxRecords);
   }
 
-  disableNext() {    
-    return this.page + this.maxRecords >= this.bookings.length;
+  disableNext() {
+    return (this.page + 1) * this.maxRecords >= this.totalElements;
   }
 
   disablePrevious() {
-    return this.page === 0;
+    return !this.page;
   }
 
-  getTitleTooltip(valorTotal) {
-    return `Valor total já gasto pelo hóspede: R$${valorTotal.toFixed(2)}`;
+  filter(checkOutNull: boolean) {
+    this.onFilter.emit({checkOutNull});
+  }
+
+  getTitleTooltip(precoTotal: number) {
+    if (!precoTotal) {
+      return "";
+    }
+
+    return `Valor total já gasto pelo hóspede: R$${precoTotal.toFixed(2)}`
   }
 }
