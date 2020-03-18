@@ -125,5 +125,6 @@ para que as dependências necessárias ao projeto sejam baixadas. Após isso, di
   ng serve --open
 ```
 e a aplicação cliente será aberta no navegador. 
-Como as aplicações não possuem comunicação, todos os dados lançados na aplicação cliente são armazenados em memória apenas. Em relação ao total gasto por um hóspede em todas as suas hospedagens, o valor é apresentado como um *tooltip* sobre a coluna **Valor Gasto R$**.
+
+Em relação ao total gasto por um hóspede em todas as suas hospedagens, o valor é apresentado como um *tooltip* sobre a coluna **Valor Gasto R$**.
 
